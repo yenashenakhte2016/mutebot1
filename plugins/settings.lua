@@ -486,8 +486,10 @@ local function run(msg, matches)
                     text = '⚙ '..lang_text(msg.to.id, 'sSettings')..':\n'
                 end
 
-                local allowed = lang_text(msg.to.id, '✅')
-                local noAllowed = lang_text(msg.to.id, '❌')
+                local allowed = lang_text(msg.to.id, 'allowed')
+                local noAllowed = lang_text(msg.to.id, 'noAllowed')
+                local text = string.gsub(text,'allowed','✅')
+             	local text = string.gsub(text,'noAllowed','❌')
 
                 --Enable/disable Stickers
                 local hash = 'stickers:'..msg.to.id
@@ -652,7 +654,7 @@ local function run(msg, matches)
                     sLangD = '🔹'
                 end
                 text = text..sLangD..' '..lang_text(msg.to.id, 'language')..': '..string.upper(sLang)..'\n'
-                
+
                 local hash = 'flood:max:'..msg.to.id
                 if not redis:get(hash) then
                     floodMax = 5
