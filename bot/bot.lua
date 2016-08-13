@@ -245,6 +245,7 @@ function create_config( )
     "settings",
     "spam",
     "version",
+    "update",
     },
   enabled_lang = {
     "arabic_lang",
