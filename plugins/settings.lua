@@ -486,8 +486,8 @@ local function run(msg, matches)
                     text ='⚙'..lang_text(msg.to.id, 'Supergroup Settings⚙⏬')..':\n'
                 end
 
-                local ✅ = lang_text(msg.to.id, '✅')
-                local ❌ = lang_text(msg.to.id, '❌')
+                local yes = lang_text(msg.to.id, '✅')
+                local no  = lang_text(msg.to.id, '❌')
 
                 --Enable/disable Stickers
                 local hash = 'stickers:'..msg.to.id
