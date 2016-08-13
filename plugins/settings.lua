@@ -654,6 +654,9 @@ local function run(msg, matches)
                     sLangD = '🔹'
                 end
                 text = text..sLangD..' '..lang_text(msg.to.id, 'language')..': '..string.upper(sLang)..'\n'
+                
+                local text = string.gsub(text,'allowed','✅')
+             	local text = string.gsub(text,'noAllowed','❌')
 
                 local hash = 'flood:max:'..msg.to.id
                 if not redis:get(hash) then
@@ -677,6 +680,8 @@ local function run(msg, matches)
                 elseif msg.to.type == 'channel' then
                     send_msg('channel#id'..msg.to.id, text, ok_cb, false)
                 end
+                 local text = string.gsub(text,'allowed','✅')
+             	local text = string.gsub(text,'noAllowed','❌')
                 return
             end
         else
