@@ -122,14 +122,14 @@ local function run(msg, matches)
       end
     end
     if matches[2] == "securitybot" then -- Put everything you like :)
-      if not is_admin1(msg) then
+      if not is_sudo(msg) then
         return "For admins only !"
       else
         return bot_stats()
       end
     end
     if matches[2] == "group" then
-      if not is_admin1(msg) then
+      if not is_sudo(msg) then
         return "For admins only !"
       else
         return chat_stats(matches[3])
