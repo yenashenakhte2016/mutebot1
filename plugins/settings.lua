@@ -481,21 +481,21 @@ local function run(msg, matches)
                 end
             else
                 if msg.to.type == 'chat' then
-                    text = '⚙ '..lang_text(msg.to.id, 'gSettings')..':\n'
+                    text = '⚙ '..lang_text(msg.to.id, 'Group Settings⏬')..':\n'
                 elseif msg.to.type == 'channel' then
-                    text = '⚙ '..lang_text(msg.to.id, 'sSettings')..':\n'
+                    text ='⚙'..lang_text(msg.to.id, 'Supergroup Settings⚙⏬')..':\n'
                 end
 
-                local allowed = lang_text(msg.to.id, 'allowed')
-                local noAllowed = lang_text(msg.to.id, 'noAllowed')
+                local ✅ = lang_text(msg.to.id, '✅')
+                local ❌ = lang_text(msg.to.id, '❌')
 
                 --Enable/disable Stickers
                 local hash = 'stickers:'..msg.to.id
                 if redis:get(hash) then
-                    sStickers = noAllowed
+                    sStickers = ❌
                     sStickersD = '🔹'
                 else
-                    sStickers = allowed
+                    sStickers = ✅
                     sStickersD = '🔸'
                 end
                 text = text..sStickersD..' '..lang_text(msg.to.id, 'stickers')..': '..sStickers..'\n'
@@ -503,10 +503,10 @@ local function run(msg, matches)
 		--Enable/disable Tgservices
                 local hash = 'tgservices:'..msg.to.id
                 if redis:get(hash) then
-                    tTgservices = noAllowed
+                    tTgservices = ❌
                     tTgservicesD = '🔹'
                 else
-                    tTgservices = allowed
+                    tTgservices = ✅
                     tTgservicesD = '🔸'
                 end
                 text = text..tTgservicesD..' '..lang_text(msg.to.id, 'tgservices')..': '..tTgservices..'\n'
@@ -514,10 +514,10 @@ local function run(msg, matches)
                 --Enable/disable Links
                 local hash = 'links:'..msg.to.id
                 if redis:get(hash) then
-                    sLink = noAllowed
+                    sLink = ❌
                     sLinkD = '🔹'
                 else
-                    sLink = allowed
+                    sLink = ✅
                     sLinkD = '🔸'
                 end
                 text = text..sLinkD..' '..lang_text(msg.to.id, 'links')..': '..sLink..'\n'
@@ -525,10 +525,10 @@ local function run(msg, matches)
                 --Enable/disable arabic messages
                 local hash = 'arabic:'..msg.to.id
                 if not redis:get(hash) then
-                    sArabe = allowed
+                    sArabe = ✅
                     sArabeD = '🔸'              
                 else
-                    sArabe = noAllowed
+                    sArabe = ❌
                     sArabeD = '🔹'
                 end
                 text = text..sArabeD..' '..lang_text(msg.to.id, 'arabic')..': '..sArabe..'\n'
@@ -536,10 +536,10 @@ local function run(msg, matches)
                 --Enable/disable bots
                 local hash = 'antibot:'..msg.to.id
                 if not redis:get(hash) then
-                    sBots = allowed
+                    sBots = ✅
                     sBotsD = '🔸'
                 else
-                    sBots = noAllowed
+                    sBots = ❌
                     sBotsD = '🔹'
                 end
                 text = text..sBotsD..' '..lang_text(msg.to.id, 'bots')..': '..sBots..'\n'
@@ -547,10 +547,10 @@ local function run(msg, matches)
                 --Enable/disable gifs
                 local hash = 'gifs:'..msg.to.id
                 if redis:get(hash) then
-                    sGif = noAllowed
+                    sGif = ❌
                     sGifD = '🔹'
                 else
-                    sGif = allowed
+                    sGif = ✅
                     sGifD = '🔸'
                 end
                 text = text..sGifD..' '..lang_text(msg.to.id, 'gifs')..': '..sGif..'\n'
@@ -558,10 +558,10 @@ local function run(msg, matches)
                 --Enable/disable send photos
                 local hash = 'photo:'..msg.to.id
                 if redis:get(hash) then
-                    sPhoto = noAllowed
+                    sPhoto = ❌
                     sPhotoD = '🔹'
                 else
-                    sPhoto = allowed
+                    sPhoto = ✅
                     sPhotoD = '🔸'
                 end
                 text = text..sPhotoD..' '..lang_text(msg.to.id, 'photos')..': '..sPhoto..'\n'
@@ -569,10 +569,10 @@ local function run(msg, matches)
                 --Enable/disable send audios
                 local hash = 'audio:'..msg.to.id
                 if redis:get(hash) then
-                    sAudio = noAllowed
+                    sAudio = ❌
                     sAudioD = '🔹'
                 else
-                    sAudio = allowed
+                    sAudio = ✅
                     sAudioD = '🔸'
                 end
                 text = text..sAudioD..' '..lang_text(msg.to.id, 'audios')..': '..sAudio..'\n'
@@ -580,10 +580,10 @@ local function run(msg, matches)
                 --Enable/disable kickme
                 local hash = 'kickme:'..msg.to.id
                 if redis:get(hash) then
-                    sKickme = allowed
+                    sKickme = ✅
                     sKickmeD = '🔸'
                 else
-                    sKickme = noAllowed
+                    sKickme = ❌
                     sKickmeD = '🔹'
                 end
                 text = text..sKickmeD..' '..lang_text(msg.to.id, 'kickme')..': '..sKickme..'\n'
@@ -591,10 +591,10 @@ local function run(msg, matches)
                 --Enable/disable spam
                 local hash = 'spam:'..msg.to.id
                 if redis:get(hash) then
-                    sSpam = noAllowed
+                    sSpam = ❌
                     sSpamD = '🔹'
                 else
-                    sSpam = allowed
+                    sSpam = ✅
                     sSpamD = '🔸'
                 end
                 text = text..sSpamD..' '..lang_text(msg.to.id, 'spam')..': '..sSpam..'\n'
@@ -602,10 +602,10 @@ local function run(msg, matches)
                 --Enable/disable setphoto
                 local hash = 'setphoto:'..msg.to.id
                 if not redis:get(hash) then
-                    sSPhoto = allowed
+                    sSPhoto = ✅
                     sSPhotoD = '🔸'
                 else
-                    sSPhoto = noAllowed
+                    sSPhoto = ❌
                     sSPhotoD = '🔹'
                 end
                 text = text..sSPhotoD..' '..lang_text(msg.to.id, 'setphoto')..': '..sSPhoto..'\n'
@@ -613,10 +613,10 @@ local function run(msg, matches)
                 --Enable/disable changing group name
                 local hash = 'name:enabled:'..msg.to.id
                 if redis:get(hash) then
-                    sName = noAllowed
+                    sName = ❌
                     sNameD = '🔹'
                 else
-                    sName = allowed
+                    sName = ✅
                     sNameD = '🔸'
                 end
                 text = text..sNameD..' '..lang_text(msg.to.id, 'gName')..': '..sName..'\n'
@@ -624,10 +624,10 @@ local function run(msg, matches)
                 --Lock/unlock numbers of channel members
                 local hash = 'lockmember:'..msg.to.id
                 if redis:get(hash) then
-                    sLock = noAllowed
+                    sLock = ❌
                     sLockD = '🔹'
                 else
-                    sLock = allowed
+                    sLock = ✅
                     sLockD = '🔸'
                 end
                 text = text..sLockD..' lockmembers: '..sLock..'\n'
@@ -635,10 +635,10 @@ local function run(msg, matches)
                 --Enable/disable Flood
                 local hash = 'anti-flood:'..msg.to.id
                 if redis:get(hash) then
-                    sFlood = allowed
+                    sFlood = ✅
                     sFloodD = '🔸'
                 else
-                    sFlood = noAllowed
+                    sFlood = ❌
                     sFloodD = '🔹'
                 end
                 text = text..sFloodD..' '..lang_text(msg.to.id, 'flood')..': '..sFlood..'\n'
