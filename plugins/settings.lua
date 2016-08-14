@@ -605,7 +605,7 @@ local function run(msg, matches)
                     sEmoji = allowed
                     sEmojiD = '🔸'
                 end
-                text = text..semojiD..' '..lang_text(msg.to.id, 'emoji')..': '..semoji..'\n'
+                text = text..sEmojiD..' '..lang_text(msg.to.id, 'emoji')..': '..semoji..'\n'
 
                 --Enable/disable kickme
                 local hash = 'kickme:'..msg.to.id
