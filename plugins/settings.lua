@@ -344,6 +344,25 @@ local function run(msg, matches)
                         end
                     end
                     return
+                 elseif matches[2] == 'emoji' then
+                    if matches[3] == 'enable' then
+                        hash = 'emoji:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'emojiT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'emojiL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'emoji:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noEmojiT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noEmojiL'), ok_cb, false)
+                        end
+                    end
+                    return
                 elseif matches[2] == 'kickme' then
                     if matches[3] == 'enable' then
                         hash = 'kickme:'..msg.to.id
@@ -576,6 +595,17 @@ local function run(msg, matches)
                     sAudioD = '🔸'
                 end
                 text = text..sAudioD..' '..lang_text(msg.to.id, 'audios')..': '..sAudio..'\n'
+ 
+                 --Enabl/disable send audios
+                  local hash = 'emoji:'..msg.to.id
+                if redis:get(hash) then
+                    sEmoji = noAllowed
+                    sEmojiD = '🔹'
+                else
+                    sEmoji = allowed
+                    sEmojiD = '🔸'
+                end
+                text = text..semojiD..' '..lang_text(msg.to.id, 'emoji')..': '..semoji..'\n'
 
                 --Enable/disable kickme
                 local hash = 'kickme:'..msg.to.id
