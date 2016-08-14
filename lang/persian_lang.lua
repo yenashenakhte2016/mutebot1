@@ -124,8 +124,8 @@ local function run(msg, matches)
         set_text(LANG, 'gSettings', 'تنظیمات گروه')
         set_text(LANG, 'sSettings', 'تنظیمات سوپرگروه')
 
-        set_text(LANG, 'allowed', '❌')
-        set_text(LANG, 'noAllowed', '✅')
+        set_text(LANG, 'allowed', '✅')
+        set_text(LANG, 'noAllowed', '❌')
         set_text(LANG, 'noSet', 'تنظیم نشده است')
 
         set_text(LANG, 'stickers', 'استیکر')
