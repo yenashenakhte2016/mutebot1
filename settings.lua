@@ -492,11 +492,11 @@ local function run(msg, matches)
                 --Enable/disable Stickers
                 local hash = 'stickers:'..msg.to.id
                 if redis:get(hash) then
-                    sStickers = noAllowed
-                    sStickersD = '🔹'
+                    Stickers = noAllowed
+                    StickersD = '🔹'
                 else
-                    sStickers = allowed
-                    sStickersD = '🔸'
+                    Stickers = allowed
+                    StickersD = '🔸'
                 end
                 text = text..sStickersD..' '..lang_text(msg.to.id, 'stickers')..': '..sStickers..'\n'
 
