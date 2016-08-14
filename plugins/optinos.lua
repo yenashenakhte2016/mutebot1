@@ -1495,7 +1495,7 @@ local function in_channel_cb(cb_extra, success, result)
   local receiver = cb_extra.receiver
   local msg = cb_extra.msg
   local data = load_data(_config.moderation.data)
-  local print_name = user_print_name(cb_extra.msg.from):gsub("‮", "")
+  local print_name = (cb_extra.msg.from):gsub("‮", "")
   local name_log = print_name:gsub("_", " ")
   local member = cb_extra.username
   local memberid = cb_extra.user_id
@@ -1648,7 +1648,7 @@ local function run(msg, matches)
 	if msg.to.type == 'channel' then
 	local support_id = msg.from.id
 	local receiver = get_receiver(msg)
-	local print_name = user_print_name(msg.from):gsub("‮", "")
+	local print_name = (msg.from):gsub("‮", "")
 	local name_log = print_name:gsub("_", " ")
 	local data = load_data(_config.moderation.data)
 		if matches[1] == 'add' and not matches[2] then
@@ -2716,7 +2716,7 @@ local function run(msg, matches)
 			text = ":راهنمای فارسی عضو ها🚀\n\n!calc عدد\nانجام محاسبات\n\n!id\nدریافت آیدی خود و گروه\n\n!me\nدریافت اطلاعات خود\n\n!voice متن\nتبدیل متن به وویس\n\n!time\nدریافت ساعت و تاریخ\n\n!text\nتبدیل متن به عکس\n\n!arx\nدریافت قیمت سکه،ارز،طلا\n\n!aparat متن\nسرچ در آپارات\n\n!app اسم\nسرچ نرم افزار\n\n!azan اسم شهر\nساعات اذانی\n\n!write متن\nطراحی کلمه  با صد فونت\n\n!weather شهر\nدریافت کامل اطلاعات هواشناسی\n\n!mean کلمه\nواژه یاب\n\n!tr کلمه\nپشتیبانی کلمه با پشتیبانی هفتاد زبان\n\n!hackernews\nدریافت اخبار هکران\n\n\n🚀 @MuteTeam 🚀"
 			reply_msg(msg.id, text, ok_cb, false)
 		elseif matches[1] == 'help' and is_owner(msg) then
-			local name_log = user_print_name(msg.from)
+			local name_log = (msg.from)
 			savelog(msg.to.id, name_log.." ["..msg.from.id.."] Used /superhelp")
 			return super_help()
 		end
