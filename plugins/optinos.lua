@@ -44,61 +44,8 @@ local function show_group_optinosmod(msg, data, target)
   return text
 end 
 
-  if matches[1] == 'lock' and is_momod(msg) then
+   if matches[1] == 'lock' and is_momod(msg) then
 			local target = msg.to.id
-			     if matches[2] == 'etehad' then
-      	local safemode ={
-        lock_group_links(msg, data, target),
-		lock_group_tag(msg, data, target),
-		lock_group_ads(msg, data, target),
-		lock_group_spam(msg, data, target),
-		lock_group_flood(msg, data, target),
-		unlock_group_arabic(msg, data, target),
-		unlock_group_membermod(msg, data, target),
-		unlock_group_rtl(msg, data, target),
-		lock_group_tgservice(msg, data, target),
-		unlock_group_sticker(msg, data, target),
-		unlock_group_contacts(msg, data, target),
-		lock_group_english(msg, data, target),
-		lock_group_fwd(msg, data, target),
-		unlock_group_number(msg, data, target),
-		lock_group_number(msg, data, target),
-		unlock_group_join(msg, data, target),
-		unlock_group_emoji(msg, data, target),
-		lock_group_username(msg, data, target),
-		lock_group_fosh(msg, data, target),
-		unlock_group_media(msg, data, target),
-		lock_group_operator(msg, data, target),
-      	}
-      	return lock_group_etehad(msg, data, target), safemode
-      end
-           local target = msg.to.id
-			     if matches[2] == 'normal' then
-      	local safemode ={
-        lock_group_links(msg, data, target),
-		lock_group_tag(msg, data, target),
-		lock_group_ads(msg, data, target),
-		lock_group_spam(msg, data, target),
-		lock_group_flood(msg, data, target),
-		unlock_group_arabic(msg, data, target),
-		unlock_group_membermod(msg, data, target),
-		unlock_group_rtl(msg, data, target),
-		unlock_group_tgservice(msg, data, target),
-		unlock_group_sticker(msg, data, target),
-		unlock_group_contacts(msg, data, target),
-		unlock_group_english(msg, data, target),
-		unlock_group_fwd(msg, data, target),
-		unlock_group_number(msg, data, target),
-		unlock_group_number(msg, data, target),
-		unlock_group_join(msg, data, target),
-		unlock_group_emoji(msg, data, target),
-		lock_group_username(msg, data, target),
-		lock_group_fosh(msg, data, target),
-		unlock_group_media(msg, data, target),
-		unlock_group_operator(msg, data, target),
-      	}
-      	return lock_group_normal(msg, data, target), safemode
-      end
 			if matches[2] == 'links' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
 				return lock_group_links(msg, data, target)
@@ -208,63 +155,9 @@ end
 				return enable_strict_rules(msg, data, target)
 			end
 		end
-       if matches[1] == 'unlock' and is_momod(msg) then
+
+         if matches[1] == 'lock' and is_momod(msg) then
 			local target = msg.to.id
-			     if matches[2] == 'etehad' then
-      	local dsafemode ={
-        lock_group_links(msg, data, target),
-		unlock_group_tag(msg, data, target),
-		lock_group_spam(msg, data, target),
-		lock_group_flood(msg, data, target),
-		unlock_group_arabic(msg, data, target),
-		unlock_group_membermod(msg, data, target),
-		lock_group_rtl(msg, data, target),
-		lock_group_tgservice(msg, data, target),
-		unlock_group_sticker(msg, data, target),
-		unlock_group_contacts(msg, data, target),
-		unlock_group_english(msg, data, target),
-		unlock_group_number(msg, data, target),
-		lock_group_ads(msg, data, target),
-		unlock_group_fwd(msg, data, target),
-		unlock_group_reply(msg, data, target),
-		unlock_group_join(msg, data, target),
-		unlock_group_emoji(msg, data, target),
-		lock_group_username(msg, data, target),
-		lock_group_fosh(msg, data, target),
-		unlock_group_media(msg, data, target),
-		unlock_group_leave(msg, data, target),
-		lock_group_operator(msg, data, target),
-      	}
-      	return unlock_group_etehad(msg, data, target), dsafemode
-      end
-           local target = msg.to.id
-			     if matches[2] == 'normal' then
-      	local dsafemode ={
-        lock_group_links(msg, data, target),
-		unlock_group_tag(msg, data, target),
-		lock_group_spam(msg, data, target),
-		lock_group_flood(msg, data, target),
-		unlock_group_arabic(msg, data, target),
-		unlock_group_membermod(msg, data, target),
-		lock_group_rtl(msg, data, target),
-		lock_group_tgservice(msg, data, target),
-		unlock_group_sticker(msg, data, target),
-		unlock_group_contacts(msg, data, target),
-		unlock_group_english(msg, data, target),
-		unlock_group_number(msg, data, target),
-		lock_group_ads(msg, data, target),
-		unlock_group_fwd(msg, data, target),
-		unlock_group_reply(msg, data, target),
-		unlock_group_join(msg, data, target),
-		unlock_group_emoji(msg, data, target),
-		lock_group_username(msg, data, target),
-		lock_group_fosh(msg, data, target),
-		unlock_group_media(msg, data, target),
-		unlock_group_leave(msg, data, target),
-		lock_group_operator(msg, data, target),
-      	}
-      	return unlock_group_normal(msg, data, target), dsafemode
-      end
 			if matches[2] == 'links' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
 				return unlock_group_links(msg, data, target)
