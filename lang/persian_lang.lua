@@ -34,18 +34,18 @@ local function run(msg, matches)
         set_text(LANG, 'require_mod', 'این پلاگین نیاز به دسترسی مدیر و یا بالا تر دارد.')
         
         -- welcome.lua
-	set_text(LANG, 'weloff', 'Welcome enabled.')
-	set_text(LANG, 'welon', 'Welcome disabled.')
-	set_text(LANG, 'byeon', 'Goodbye enabled.')
-	set_text(LANG, 'byeoff', 'Goodbye disabled.')
-	set_text(LANG, 'welcome1', 'Hi ')
-	set_text(LANG, 'welcome2', 'Welcome to ')
-	set_text(LANG, 'weldefault', 'The welcome is the default.')
-	set_text(LANG, 'byedefault', 'The goodbye is the default.')
-	set_text(LANG, 'newbye', 'Goodbye saved! is')
-	set_text(LANG, 'bye1', 'Bye ')
-	set_text(LANG, 'bye2', ' thank you for your visit.')
-	set_text(LANG, 'welnew', 'Welcome saved! is')
+	set_text(LANG, 'weloff', 'خوش آمد گویی با موفقیت فعال شد.')
+	set_text(LANG, 'welon', 'خوش آمد گویی با موفقیت غیرفعال شد.')
+	set_text(LANG, 'byeon', 'خداحافظی فعال شد.')
+	set_text(LANG, 'byeoff', 'خداحافظی غیرفعال شد.')
+	set_text(LANG, 'welcome1', 'سلام ')
+	set_text(LANG, 'welcome2', 'خوش آمدید به')
+	set_text(LANG, 'weldefault', 'خوش آمدید به این گروه.')
+	set_text(LANG, 'byedefault', 'خدانگهدار .')
+	set_text(LANG, 'newbye', 'متن خداحافظی با موفقیت ذخیره شد')
+	set_text(LANG, 'bye1', 'خداحافظ ')
+	set_text(LANG, 'bye2', ' ممنون از جوین شدن در گروه.')
+	set_text(LANG, 'welnew', 'متن خوش آمدگویی با موفقیت ذخیره شد')
 	
         -- Spam.lua --
         set_text(LANG, 'reportUser', 'کاربر')
@@ -124,8 +124,8 @@ local function run(msg, matches)
         set_text(LANG, 'gSettings', 'تنظیمات گروه')
         set_text(LANG, 'sSettings', 'تنظیمات سوپرگروه')
 
-        set_text(LANG, 'allowed', 'امکان پذیر')
-        set_text(LANG, 'noAllowed', 'ممنوع')
+        set_text(LANG, 'allowed', '✅')
+        set_text(LANG, 'noAllowed', '❌')
         set_text(LANG, 'noSet', 'تنظیم نشده است')
 
         set_text(LANG, 'stickers', 'استیکر')
@@ -271,8 +271,8 @@ local function run(msg, matches)
         set_text(LANG, 'errorNoPlug', 'این پلاگین وجود ندارد و یا فعال نیست.')
 
         -- rules.lua --
-        set_text(LANG, 'setRules', 'Chat rules have been updated.')
-        set_text(LANG, 'remRules', 'Chat rules have been removed.')
+        set_text(LANG, 'setRules', 'قوانین گروه با موفقیت تغییر یافت.')
+        set_text(LANG, 'remRules', 'قوانین گروه با موفقیت حذف شدی.')
 
         ------------
         -- Usages --
