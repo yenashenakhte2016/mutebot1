@@ -483,7 +483,7 @@ local function run(msg, matches)
                 if msg.to.type == 'chat' then
                     text = '⚙ '..lang_text(msg.to.id, 'gSettings')..':\n'
                 elseif msg.to.type == 'channel' then
-                    text = '⚙ '..lang_text(msg.to.id, 'sSettings')..'⚙⏬':\n\n'
+                    text = '⚙ '..lang_text(msg.to.id, 'sSettings')..'⚙⏬'\n\n'
                 end
 
                 local allowed = lang_text(msg.to.id, 'allowed')
