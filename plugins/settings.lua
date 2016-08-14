@@ -363,6 +363,25 @@ local function run(msg, matches)
                         end
                     end
                     return
+                elseif matches[2] == 'fosh' then
+                    if matches[3] == 'enable' then
+                        hash = 'fosh:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'foshT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'foshL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'fosh:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noFoshT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noFoshL'), ok_cb, false)
+                        end
+                    end
+                    return
                 elseif matches[2] == 'kickme' then
                     if matches[3] == 'enable' then
                         hash = 'kickme:'..msg.to.id
@@ -596,7 +615,7 @@ local function run(msg, matches)
                 end
                 text = text..sAudioD..' '..lang_text(msg.to.id, 'audios')..': '..sAudio..'\n'
  
-                 --Enabl/disable send audios
+                 --Enabl/disable send emoji
                   local hash = 'emoji:'..msg.to.id
                 if redis:get(hash) then
                     sEmoji = noAllowed
@@ -606,6 +625,17 @@ local function run(msg, matches)
                     sEmojiD = '🔸'
                 end
                 text = text..sEmojiD..' '..lang_text(msg.to.id, 'emoji')..': '..sEmoji..'\n'
+  
+                 --Enabl/disable send fosh
+                  local hash = 'fosh:'..msg.to.id
+                if redis:get(hash) then
+                    sFosh = noAllowed
+                    sFoshD = '🔹'
+                else
+                    sFosh = allowed
+                    sFoshD = '🔸'
+                end
+                text = text..sFoshD..' '..lang_text(msg.to.id, 'fosh')..': '..sFosh..'\n'
 
                 --Enable/disable kickme
                 local hash = 'kickme:'..msg.to.id
