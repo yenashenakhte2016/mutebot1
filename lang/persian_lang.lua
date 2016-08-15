@@ -22,7 +22,7 @@ local function run(msg, matches)
         -- Translation version --
         -------------------------
         set_text(LANG, 'version', '0.3')
-        set_text(LANG, 'versionExtended', 'نسخه ترجمه : نسخه 0.3')
+        set_text(LANG, 'versionExtended', 'نسخه ترجمه : نسخه 0.5')
 
         -------------
         -- Plugins --
@@ -76,6 +76,17 @@ local function run(msg, matches)
         set_text(LANG, 'emojiT', 'از این به بعد استفاده از اموجی در این گروه آزاد است.')
         set_text(LANG, 'emojiL', 'از این به بعد استفاده از اموجی در این سوپر گروه آزاد است.')
      
+         set_text(LANG, 'noUsernameT', 'استفاده از یوزرنیم در این گروه ممنوع میباشد.')
+        set_text(LANG, 'noUsernameL', 'استفاده از یوزرنیم در این سوپر گروه ممنوع میباشد.')
+        set_text(LANG, 'usernameT', 'از این به بعد استفاده از یوزرنیم در این گروه آزاد است.')
+        set_text(LANG, 'usernameL', 'از این به بعد استفاده از یوزرنیم در این سوپر گروه آزاد است.')
+
+       
+       set_text(LANG, 'noTagT', 'استفاده از تگ در این گروه ممنوع میباشد.')
+        set_text(LANG, 'noTagL', 'استفاده از تگ در این سوپر گروه ممنوع میباشد.')
+        set_text(LANG, 'tagT', 'از این به بعد استفاده از تگ در این گروه آزاد است.')
+        set_text(LANG, 'tagL', 'از این به بعد استفاده از تگ در این سوپر گروه آزاد است.')
+
       set_text(LANG, 'noFoshT', 'استفاده از فحش در این گروه ممنوع میباشد.')
         set_text(LANG, 'noFoshL', 'استفاده از فحش در این سوپر گروه ممنوع میباشد.')
         set_text(LANG, 'foshT', 'از این به بعد استفاده از فحش در این گروه آزاد است.')
@@ -143,14 +154,16 @@ local function run(msg, matches)
         set_text(LANG, 'links', 'حذف خودکار لینک')
         set_text(LANG, 'arabic', 'حذف خودکار کلمات عربی')
         set_text(LANG, 'bots', 'حذف خودکار ربات ها')
-       set_text(LANG, 'fosh', 'حذف خودکار فحش')
+        set_text(LANG, 'fosh', 'حذف خودکار فحش')
+        set_text(LANG, 'username', 'حذف خودکار یوزرنیم(@)')
+        set_text(LANG, 'tag', 'حذف خودکار تگ ها(#)')
         set_text(LANG, 'gifs', 'حذف خودکار گیف')
         set_text(LANG, 'photos', 'حذف خودکار عکس ها')
         set_text(LANG, 'emoji', 'حذف خودکار اموجی')
         set_text(LANG, 'audios', 'حذف خودکار فایل صوتی')
         set_text(LANG, 'kickme', 'حذف دستور(kickme)')
         set_text(LANG, 'spam', 'حذف خودکار اسپم')
-        set_text(LANG, 'lockMembers', 'حذف ادد مبر')
+        set_text(LANG, 'lockmembers', 'حذف ادد مبر')
         set_text(LANG, 'gName', 'امکان عوض کردن نام گروه')
         set_text(LANG, 'flood', 'حساسیت به اسپم')
         set_text(LANG, 'language', 'زبان ربات روی')
@@ -353,7 +366,7 @@ local function run(msg, matches)
         set_text(LANG, 'moderation:18', '#rem : با ریپلی کردن پیامی و استفاده از این دستور ، پیام ریپلی شده پاک خواهد شد')
         
         -- settings.lua --
-        set_text(LANG, 'settings:0', 20)
+        set_text(LANG, 'settings:0', 22)
         set_text(LANG, 'settings:1', '#settings stickers enable/disable : وقتی فعال باشد ، ربات تمامی استکیر هارا پاک خواهد کرد')
         set_text(LANG, 'settings:2', '#settings links enable/disable : وقتی فعال باشد ، ربات  تمامی لینک هارا پاک خواهد کرد')
         set_text(LANG, 'settings:3', '#settings arabic enable/disabl : وقتی فعال باشد ، ربات  تمامی پیام های فارسی و یا عربی را پاک خواهد کرد')
