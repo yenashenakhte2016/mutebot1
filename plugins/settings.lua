@@ -382,6 +382,44 @@ local function run(msg, matches)
                         end
                     end
                     return
+                elseif matches[2] == 'tag' then
+                    if matches[3] == 'enable' then
+                        hash = 'tag:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'tagT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'tagL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'tag:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noTagT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noTagL'), ok_cb, false)
+                        end
+                    end
+                    return
+                elseif matches[2] == 'username' then
+                    if matches[3] == 'enable' then
+                        hash = 'username:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'usernameT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'usernameL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'username:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noUsernameT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noUsernameL'), ok_cb, false)
+                        end
+                    end
+                    return
                 elseif matches[2] == 'kickme' then
                     if matches[3] == 'enable' then
                         hash = 'kickme:'..msg.to.id
@@ -636,6 +674,28 @@ local function run(msg, matches)
                     sFoshD = '🔸'
                 end
                 text = text..sFoshD..' '..lang_text(msg.to.id, 'fosh')..': '..sFosh..'\n'
+
+                   --Enabl/disable send tag
+                  local hash = 'tag:'..msg.to.id
+                if redis:get(hash) then
+                    sTag = noAllowed
+                    sTagD = '🔹'
+                else
+                    sTag = allowed
+                    sTagD = '🔸'
+                end
+                text = text..sTagD..' '..lang_text(msg.to.id, 'tag')..': '..sTag..'\n'
+  
+                 --Enabl/disable send username
+                  local hash = 'username:'..msg.to.id
+                if redis:get(hash) then
+                    sUsername = noAllowed
+                    sUsernameD = '🔹'
+                else
+                    sUsername = allowed
+                    sUsernameD = '🔸'
+                end
+                text = text..sUsernameD..' '..lang_text(msg.to.id, 'username')..': '..sUsername..'\n'
 
                 --Enable/disable kickme
                 local hash = 'kickme:'..msg.to.id
