@@ -578,7 +578,7 @@ function lang_text(chat_id, keyword)
     if redis:get(hashtext) then
         return redis:get(hashtext)
     else
-        return 'زبان "'..lang..'" نصب نشده است یا وجود ندارد\nبرای تغییر زبان از دستور #lang استفاده کنید,تعداد زبان های موجود\nfa-en-ar-it-ga-sp-po-ca\nبرای نصب زبان باید از دستور #install استفاده کنید ,دستورات در زیر\n #install persian_lang\n#install spanish_lang\n#install arabic_lang\n#install catalan_lang\n#install english_lang\n#install galician_lang\n#install italian_lang\n#install portuguese_lang\nبرای از یکی از دستورات بالا به زبان خود استفاده کنید'
+        return 'Please, install your selected "'..lang..'" language by #install [archive_name(english_lang, spanish_lang...)]. First, active your language package like a normal plugin by it\'s name. For example, #plugins enable english_lang. Or set another one by typing #lang [language(en, es...)].'
     end
     
 end
