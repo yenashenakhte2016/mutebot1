@@ -1,17 +1,4 @@
---------------------------------------------------
---      ____  ____ _____                        --
---     |    \|  _ )_   _|___ ____   __  __      --
---     | |_  )  _ \ | |/ ·__|  _ \_|  \/  |     --
---     |____/|____/ |_|\____/\_____|_/\/\_|     --
---                                              --
---------------------------------------------------
---                                              --
---       Developers: @Josepdal & @MaSkAoS       --
---     Support: @Skneos,  @iicc1 & @serx666     --
---                                              --
---    #creategroup by @lamjavid &  @Josepdal	--
---												--
---------------------------------------------------
+
 
 do
 
@@ -401,6 +388,63 @@ local function run(msg, matches)
                         end
                     end
                     return
+                      elseif matches[2] == 'inline' then
+                    if matches[3] == 'enable' then
+                        hash = 'inline:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'inlineT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'inlineL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'inline:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noInlineT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noInlineL'), ok_cb, false)
+                        end
+                    end
+                    return
+                elseif matches[2] == 'video' then
+                    if matches[3] == 'enable' then
+                        hash = 'video:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'videoT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'videoL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'video:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noVideoT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noVideoL'), ok_cb, false)
+                        end
+                    end
+                    return
+                elseif matches[2] == 'operator' then
+                    if matches[3] == 'enable' then
+                        hash = 'operator:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'operatorT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'operatorL'), ok_cb, false)
+                        end
+                    elseif matches[3] == 'disable' then
+                        hash = 'operator:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noOperatorT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noOperatorL'), ok_cb, false)
+                        end
+                    end
+                    return
                 elseif matches[2] == 'username' then
                     if matches[3] == 'enable' then
                         hash = 'username:'..msg.to.id
@@ -685,7 +729,40 @@ local function run(msg, matches)
                     sTagD = '🔸'
                 end
                 text = text..sTagD..' '..lang_text(msg.to.id, 'tag')..': '..sTag..'\n'
+
+                   --Enabl/disable send inline
+                  local hash = 'inline:'..msg.to.id
+                if redis:get(hash) then
+                    sInline = noAllowed
+                    sInlineD = '🔹'
+                else
+                    sInline = allowed
+                    sInlineD = '🔸'
+                end
+                text = text..sInlineD..' '..lang_text(msg.to.id, 'inline')..': '..sInline..'\n'
   
+                 --Enabl/disable send video
+                  local hash = 'video:'..msg.to.id
+                if redis:get(hash) then
+                    sVideo = noAllowed
+                    sVideoD = '🔹'
+                else
+                    sVideo = allowed
+                    sVideoD = '🔸'
+                end
+                text = text..sVideoD..' '..lang_text(msg.to.id, 'video')..': '..sVideo..'\n'
+
+                   --Enabl/disable send operator
+                  local hash = 'operator:'..msg.to.id
+                if redis:get(hash) then
+                    sOperator = noAllowed
+                    sOperatorD = '🔹'
+                else
+                    sOperator = allowed
+                    sOperatorD = '🔸'
+                end
+                text = text..sOperatorD..' '..lang_text(msg.to.id, 'operator')..': '..sOperator..'\n'
+
                  --Enabl/disable send username
                   local hash = 'username:'..msg.to.id
                 if redis:get(hash) then
