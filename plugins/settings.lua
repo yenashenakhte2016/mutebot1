@@ -696,6 +696,17 @@ local function run(msg, matches)
                     sAudioD = '🔸'
                 end
                 text = text..sAudioD..' '..lang_text(msg.to.id, 'audios')..': '..sAudio..'\n'
+ 
+                 --Enabl/disable send emoji
+                  local hash = 'emoji:'..msg.to.id
+                  if redis:get(hash) then
+                    sEmoji = noAllowed
+                    sEmojiD = '🔹'
+                else
+                    sEmoji = allowed
+                    sEmojiD = '🔸'
+                end
+                text = text..sEmojiD..' '..lang_text(msg.to.id, 'emoji')..': '..sEmoji..'\n'
   
                  --Enabl/disable send fosh
                   local hash = 'fosh:'..msg.to.id
