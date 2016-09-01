@@ -1,7 +1,3 @@
---By @DevMohammad
---Channel @MuteTeam
-
-
 do
 
 local function create_group(msg, group_name)
@@ -9,7 +5,89 @@ local function create_group(msg, group_name)
     create_group_chat(group_creator, group_name, ok_cb, false)
     return 'ℹ️ '..lang_text(msg.to.id, 'createGroup:1')..' "'..string.gsub(group_name, '_', ' ')..'" '..lang_text(msg.to.id, 'createGroup:2')
 end
+local function create_group2(cb_extra, success, result)
+    local group_name = cb_extra.group_name
+    local group_creator = result.print_name
+    local msg = result.msg
+    create_group_chat(group_creator, group_name, ok_cb, false)
+    print('ok')
+end
+local function owincreate(extra, success, result)
+    local chat_id = extra.chat_id
+	for k,user in pairs(result.members) do
+	if tonumber(user.peer_id) == 191104143 then
+ else
+     local ohash = 'owner:'..chat_id
+     redis:set(ohash, tonumber(user.peer_id))
+	end
+end
+    send_large_msg('chat#id'..chat_id, '🆕 '..lang_text(chat_id, 'newGroupWelcome'), ok_cb, true)
+	end
+local function index_function(chat_title)
+  for k,v in pairs(_chats.chats) do
+    if chat_title == v[2] then
+    	print(k)
+      return k
+    end
+  end
+  -- If not found
+  return false
+end
+local function index_function3(chat_title)
+  for k,v in pairs(_chats.chats) do
+    if chat_title == v[2] then
+      return v[1]
+    end
+  end
+  -- If not found
+  return false
+end
+local function index_function2(chat_id)
+  for k,v in pairs(_chats.chats) do
+    if chat_id == v[1] then
+    	print(k)
+      return k
+    end
+  end
+  -- If not found
+  return false
+end
+local function sttophoto(msg, success, result)
+  if success then
+    local file = 'data/stickers/'..msg.from.id..'.png'
+    os.rename(result, file)
+    send_large_msg(get_receiver(msg), lang_text(msg.to.id, 'u_image'), ok_cb, false)
+    send_document(get_receiver(msg), file, ok_cb, false)
+    send_photo(get_receiver(msg), file, ok_cb, false)
+	local hash = 'stophoto:'..msg.to.id..':'..msg.from.id
+    redis:del(hash)
+  else
+    print('Error downloading: '..msg.id)
+    send_large_msg(get_receiver(msg), 'Failed, please try again!', ok_cb, false)
+  end
+end
+local function phtosticker(msg, success, result)
+  if success then
+    local file = 'data/stickers/'..msg.from.id..'.webp'
+    local nfile = 'data/stickers/'..msg.from.id..'.png'
+    os.rename(result, file)
+        local infile = io.open(file, "r")
+        local instr = infile:read("*a")
+        infile:close()
+        local outfile = io.open(nfile, "w")
+        outfile:write(instr)
+        outfile:close()
+    send_large_msg(get_receiver(msg), lang_text(msg.to.id, 'u_sticker'), ok_cb, false)
+    send_document(get_receiver(msg), file, ok_cb, false)
+    send_document(get_receiver(msg), nfile, ok_cb, false)
+	local hash = 'ptosticker:'..msg.to.id..':'..msg.from.id
+    redis:del(hash)
 
+  else
+    print('Error downloading: '..msg.id)
+    send_large_msg(get_receiver(msg), 'Failed, please try again!', ok_cb, false)
+  end
+end
 local function remove_message(extra, success, result)
     msg = backward_msg_format(result)
     delete_msg(msg.id, ok_cb, false)
@@ -33,8 +111,61 @@ local function set_group_photo(msg, success, result)
         return 'ℹ️ '..lang_text(msg.to.id, 'photoSaved')
     end
 end
-
+local function upmembers_channel(extra, success, result)
+	local chatid = extra.chatid
+	local ochatid = extra.ochatid
+	for k,user in ipairs(result) do
+	local hash = 'umsgs:'..user.peer_id..':'..ochatid
+	local chos = redis:get(hash)
+	redis:del(hash)
+	local hash = 'umsgs:'..user.peer_id..':'..chatid
+	redis:set(hash, tonumber(chos))
+	local mhash = 'mod:'..ochatid..':'..user.peer_id
+	if redis:get(mhash) then
+	redis:del(mhash)
+	local nhash = 'mod:'..chatid..':'..user.peer_id
+	redis:set(nhash,true)
+	end
+	end
+end
 local function pre_process(msg)
+if not msg.service then
+    local hash = 'totalmsgs'
+    redis:incr(hash)
+    local hash = 'chattotalmsgs:'..msg.to.id
+    redis:incr(hash)
+    local hash = 'usertotalmsgs:'..msg.from.id
+    redis:incr(hash)
+    local hash = 'umsgs:'..msg.from.id..':'..msg.to.id
+    redis:incr(hash)
+	end
+    if msg.action and msg.action.type then
+    local action = msg.action.type
+    if action == 'migrated_from' then
+	local ochatid = index_function3(string.gsub(msg.to.title, '_', ' '))
+	local chatid = msg.to.id
+	local hash = 'chattotalmsgs:'..ochatid
+	local chos = redis:get(hash)
+	redis:del(hash)
+	local hash = 'chattotalmsgs:'..msg.to.id
+	redis:set(hash, tonumber(chos))
+	local hash = 'owner:'..ochatid
+	local choo = redis:get(hash)
+	redis:del(hash)
+	local hash = 'owner:'..msg.to.id
+	redis:set(hash, tonumber(choo))
+	channel_get_users('channel#id'..msg.to.id, upmembers_channel, {ochatid=ochatid, chatid=chatid})
+	local nameid = index_function(string.gsub(msg.to.title, '_', ' '))
+    	table.remove(_chats.chats, nameid)
+		table.insert(_chats.chats, {tonumber(msg.to.id), string.gsub(msg.to.title, '_', ' ')})
+		save_chats()
+	elseif action == 'chat_rename' then
+	local nameid = index_function2(tonumber(msg.to.id))
+	    table.remove(_chats.chats, nameid)
+	    table.insert(_chats.chats, {tonumber(msg.to.id), string.gsub(msg.action.title, '_', ' ')})
+		save_chats()
+    end
+	end
     local hash = 'flood:max:'..msg.to.id
     if not redis:get(hash) then
         floodMax = 5
@@ -48,6 +179,61 @@ local function pre_process(msg)
     else
         floodTime = tonumber(redis:get(hash))
     end
+	--plugins check
+	        if not msg.media then
+            webp = 'nothing'
+        else
+            webp = msg.media.caption
+        end
+        if webp == 'sticker.webp' then
+		local hash = 'stophoto:'..msg.to.id..':'..msg.from.id
+			if redis:get(hash) then
+			load_document(msg.id, sttophoto, msg)
+			end
+		else
+		local hash = 'stophoto:'..msg.to.id..':'..msg.from.id
+			if redis:get(hash) then
+              if msg.to.type == 'chat' then
+              send_msg('chat#id'..msg.to.id, 'ℹ️ شما استیکری ارسال نکردید عملیات شما در این گروه لغو شد', ok_cb, false)
+              elseif msg.to.type == 'channel' then
+              send_msg('channel#id'..msg.to.id, 'ℹ️ شما استیکری ارسال نکردید عملیات شما در این سوپر گروه لغو شد', ok_cb, false)
+              end
+			  redis:del(hash)
+			end
+        end
+		      if msg.media then
+            if msg.media.type == 'photo' then
+                local hash = 'ptosticker:'..msg.to.id..':'..msg.from.id
+                if redis:get(hash) then
+                    load_photo(msg.id, phtosticker, msg)
+                end
+			elseif msg.media.caption:match(".png") then
+			local hash = 'ptosticker:'..msg.to.id..':'..msg.from.id
+                if redis:get(hash) then
+                    load_document(msg.id, phtosticker, msg)
+                end
+			else
+			local hash = 'ptosticker:'..msg.to.id..':'..msg.from.id
+			if redis:get(hash) then
+              if msg.to.type == 'chat' then
+              send_msg('chat#id'..msg.to.id, 'ℹ️ شما تصویری ارسال نکردید عملیات شما در این گروه لغو شد', ok_cb, false)
+              elseif msg.to.type == 'channel' then
+              send_msg('channel#id'..msg.to.id, 'ℹ️ شما تصویری ارسال نکردید عملیات شما در این سوپر گروه لغو شد', ok_cb, false)
+              end
+			  redis:del(hash)
+			end
+            end
+			else
+			local hash = 'ptosticker:'..msg.to.id..':'..msg.from.id
+			if redis:get(hash) then
+              if msg.to.type == 'chat' then
+              send_msg('chat#id'..msg.to.id, 'ℹ️ شما تصویری ارسال نکردید عملیات شما در این گروه لغو شد', ok_cb, false)
+              elseif msg.to.type == 'channel' then
+              send_msg('channel#id'..msg.to.id, 'ℹ️ شما تصویری ارسال نکردید عملیات شما در این سوپر گروه لغو شد', ok_cb, false)
+              end
+			  redis:del(hash)
+			end
+        end
     if not permissions(msg.from.id, msg.to.id, "pre_process") then
         --Checking flood
         local hashse = 'anti-flood:'..msg.to.id
@@ -71,7 +257,7 @@ local function pre_process(msg)
                             chat_del_user('chat#id'..msg.to.id, 'user#id'..msg.from.id, ok_cb, true)
                         elseif msg.to.type == 'channel' then
                             send_msg('channel#id'..msg.to.id, lang_text(chat, 'user')..' @'..msg.from.username..' ('..msg.from.id..') '..lang_text(chat, 'isFlooding'), ok_cb, true)
-                            channel_kick_user('channel#id'..msg.to.id, 'user#id'..msg.from.id, ok_cb, true)
+                            channel_kick('channel#id'..msg.to.id, 'user#id'..msg.from.id, ok_cb, true)
                         end
                     end
                     redis:setex(hash, floodTime, msgs+1)
@@ -88,13 +274,21 @@ local function pre_process(msg)
 	                    if msg.to.type == 'chat' then
 	                        chat_del_user('chat#id'..msg.to.id, 'user#id'..msg.action.user.id, ok_cb, true)
 	                    elseif msg.to.type == 'channel' then
-	                        channel_kick_user('channel#id'..msg.to.id, 'user#id'..msg.action.user.id, ok_cb, true)
+	                        channel_kick('channel#id'..msg.to.id, 'user#id'..msg.action.user.id, ok_cb, true)
 	                    end
 	                end
 	            end
             end
         end
-
+        --Cheking Contact
+        if msg.media then
+        if msg.media.type == 'contact' then
+        hash = 'contacts:'..msg.to.id
+            if redis:get(hash) then
+                delete_msg(msg.id, ok_cb, false)
+            end
+        end
+        end
         --Checking stickers
         if not msg.media then
             webp = 'nothing'
@@ -114,14 +308,7 @@ local function pre_process(msg)
                 mp4 = msg.media.caption or 'audio'
             end
         end
-	--Checking tgservices
-        hash = 'tgservices:'..msg.to.id
-        if redis:get(hash) then
-		local action = msg.action.type
-		if action == 'chat_add_user' or action == 'chat_add_user_link' or action == 'chat_del_user' then
-		    delete_msg(msg.id, ok_cb, false)
-		end
-	end
+           
         --Checking GIFs and MP4 files
         if mp4 == 'giphy.mp4' then
             hash = 'gifs:'..msg.to.id
@@ -162,20 +349,37 @@ local function pre_process(msg)
             delete_msg(msg.id, ok_cb, false)
         end
     else
+	     local hash = 'setphoto:'..msg.to.id..':'..msg.from.id
+         if redis:get(hash) then
         if msg.media then
             if msg.media.type == 'photo' then
-                local hash = 'setphoto:'..msg.to.id..':'..msg.from.id
-                if redis:get(hash) then
                     redis:del(hash)
                     load_photo(msg.id, set_group_photo, msg)
-                    print('setphoto')
                     delete_msg(msg.id, ok_cb, false)
-                end
+					end
+		else
+		            if msg.to.type == 'chat' then
+              send_msg('chat#id'..msg.to.id, 'ℹ️ شما تصویری ارسال نکردید عملیات شما در این گروه لغو شد', ok_cb, false)
+              elseif msg.to.type == 'channel' then
+              send_msg('channel#id'..msg.to.id, 'ℹ️ شما تصویری ارسال نکردید عملیات شما در این سوپر گروه لغو شد', ok_cb, false)
+              end
+		redis:del(hash)
             end
         end
     end
     return msg
 end
+local function run(msg, matches)
+    if matches[1] == 'tophoto' then
+	hash = 'stophoto:'..msg.to.id..':'..msg.from.id
+    	redis:set(hash, true)
+    	return 'ℹ️ لطفا استیکری را ارسال فرمایید'
+    end
+	    if matches[1] == 'tosticker' then
+	hash = 'ptosticker:'..msg.to.id..':'..msg.from.id
+    	redis:set(hash, true)
+    	return 'ℹ️ لطفا تصویری را ارسال فرمایید'
+    end
     if matches[1] == 'lock' then
                       if matches[2] == 'sticker' then
                         hash = 'stickers:'..msg.to.id
@@ -193,6 +397,15 @@ end
                             send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noFoshT'), ok_cb, false)
                         elseif msg.to.type == 'channel' then
                             send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noFoshL'), ok_cb, false)
+                        end
+                    return
+                      elseif matches[2] == 'tgservices' then
+                        hash = 'tgservices:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noTgservicesT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noTgservicesL'), ok_cb, false)
                         end
                     return
 					    elseif matches[2] == 'username' then
@@ -229,6 +442,24 @@ end
                             send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noPhotosT'), ok_cb, false)
                         elseif msg.to.type == 'channel' then
                             send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noPhotosL'), ok_cb, false)
+                        end
+                    return
+                  elseif matches[2] == 'inline' then
+                        hash = 'inline:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noInlineT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noInlineL'), ok_cb, false)
+                        end
+                    return
+                elseif matches[2] == 'video' then
+                        hash = 'video:'..msg.to.id
+                        redis:set(hash, true)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noVideoT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'noVideoL'), ok_cb, false)
                         end
                     return
                 elseif matches[2] == 'bot' then
@@ -350,6 +581,15 @@ end
                             send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'photosL'), ok_cb, false)
                         end
                     return
+                elseif matches[2] == 'tgservices' then
+                        hash = 'tgservices:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'tgservicesT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'tgservicesL'), ok_cb, false)
+                        end
+                    return
                 elseif matches[2] == 'bot' then
                         hash = 'antibot:'..msg.to.id
                         redis:del(hash)
@@ -376,7 +616,25 @@ end
                         elseif msg.to.type == 'channel' then
                             send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'audiosL'), ok_cb, false)
                         end                    
-                    return               
+                    return
+                      elseif matches[2] == 'inline' then
+                        hash = 'inline:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'inlineT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'inlineL'), ok_cb, false)
+                        end                    
+                    return
+                elseif matches[2] == 'video' then
+                        hash = 'video:'..msg.to.id
+                        redis:del(hash)
+                        if msg.to.type == 'chat' then
+                            send_msg('chat#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'videoT'), ok_cb, false)
+                        elseif msg.to.type == 'channel' then
+                            send_msg('channel#id'..msg.to.id, 'ℹ️ '..lang_text(msg.to.id, 'videoL'), ok_cb, false)
+                        end                    
+                    return
                 elseif matches[2] == 'flood' then
                         hash = 'anti-flood:'..msg.to.id
                         redis:set(hash, true)
@@ -492,9 +750,9 @@ end
                 elseif msg.to.type == 'channel' then
                     text = '⚙ '..lang_text(msg.to.id, 'sSettings')..':\n\n'
                 end
-                local allowed = lang_text(msg.to.id, 'allowed')..' ✅'
-                local noAllowed = lang_text(msg.to.id, 'noAllowed')..' 🚫'
-                local sD = '🔹'
+                local allowed = lang_text(msg.to.id, 'allowed')..'\n'
+                local noAllowed = lang_text(msg.to.id, 'noAllowed')..'\n'
+                local sD = '🔸'
 				--Enable/disable Flood
                 local hash = 'anti-flood:'..msg.to.id
                 if redis:get(hash) then
@@ -502,7 +760,7 @@ end
                 else
                     sFlood = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'flood')..': '..sFlood..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'flood')..': '..sFlood..'\n'
 				--Enable/disable bws
                 local hash = 'fosh:'..msg.to.id
                 if not redis:get(hash) then
@@ -510,7 +768,7 @@ end
                 else
                     sFosh = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'fosh')..': '..sFosh..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'fosh')..': '..sFosh..'\n'
 				--Enable/disable porns
                 local hash = 'username:'..msg.to.id
                 if not redis:get(hash) then
@@ -518,7 +776,8 @@ end
                 else
                     sUsername = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'username')..': '..sUsername..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'username')..': '..sUsername..'\n'
+
 				--Enable/disable adv
                 local hash = 'spam:'..msg.to.id
                 if redis:get(hash) then
@@ -526,7 +785,7 @@ end
                 else
                     sSpam = allowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'spam')..': '..sSpam..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'spam')..': '..sSpam..'\n'
 
                 --Enable/disable emoji messages
                 local hash = 'emoji:'..msg.to.id
@@ -535,7 +794,7 @@ end
                 else
                     sEmoji = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'emoji')..': '..sEmoji..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'emoji')..': '..sEmoji..'\n'
                 --Enable/disable bots
                 local hash = 'antibot:'..msg.to.id
                 if not redis:get(hash) then
@@ -543,15 +802,43 @@ end
                 else
                     sBots = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'bots')..': '..sBots..'\n\n'
-				                --Enable/disable setphoto
+                text = text..sD..' '..lang_text(msg.to.id, 'bots')..': '..sBots..'\n'
+
+                            --Enable/disable video messages
+                local hash = 'video:'..msg.to.id
+                if not redis:get(hash) then
+                    sVideo = allowed
+                else
+                    sVideo = noAllowed
+                end
+                text = text..sD..' '..lang_text(msg.to.id, 'video')..': '..sVideo..'\n'
+
+                --Enable/disable inline
+                local hash = 'inline:'..msg.to.id
+                if not redis:get(hash) then
+                    sInline = allowed
+                else
+                    sInline = noAllowed
+                end
+                text = text..sD..' '..lang_text(msg.to.id, 'inline')..': '..sInline..'\n'
+
+                    --Enable/disable tgservices
+                local hash = 'tgservices:'..msg.to.id
+                if not redis:get(hash) then
+                    sTgservices = allowed
+                else
+                    sTgservices = noAllowed
+                end
+                text = text..sD..' '..lang_text(msg.to.id, 'tgservices')..': '..sTgservices..'\n'
+
+		                --Enable/disable setphoto
                 local hash = 'setphoto:'..msg.to.id
                 if not redis:get(hash) then
                     sSPhoto = allowed
                 else
                     sSPhoto = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'setphoto')..': '..sSPhoto..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'setphoto')..': '..sSPhoto..'\n'
 
                 --Enable/disable changing group name
                 local hash = 'name:'..msg.to.id
@@ -560,7 +847,7 @@ end
                 else
                     sName = allowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'gName')..': '..sName..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'gName')..': '..sName..'\n'
 				--Enable/disable Stickers
                 local hash = 'stickers:'..msg.to.id
                 if redis:get(hash) then
@@ -568,7 +855,7 @@ end
                 else
                     sStickers = allowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'stickers')..': '..sStickers..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'stickers')..': '..sStickers..'\n'
 			    
                 --Enable/disable send photos
                 local hash = 'photo:'..msg.to.id
@@ -577,7 +864,7 @@ end
                 else
                     sPhoto = allowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'photos')..': '..sPhoto..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'photos')..': '..sPhoto..'\n'
 
                 --Enable/disable send audios
                 local hash = 'audio:'..msg.to.id
@@ -586,7 +873,7 @@ end
                 else
                     sAudio = allowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'audios')..': '..sAudio..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'audios')..': '..sAudio..'\n'
 
                 --Enable/disable contacts
                 local hash = 'tag:'..msg.to.id
@@ -595,7 +882,7 @@ end
                 else
                     sTag = noAllowed
                 end
-                text = text..sD..' '..lang_text(msg.to.id, 'tag')..': '..sTag..'\n\n'
+                text = text..sD..' '..lang_text(msg.to.id, 'tag')..': '..sTag..'\n'
 				
                 local hash = 'langset:'..msg.to.id
                 if redis:get(hash) == 'fa' then
@@ -605,7 +892,7 @@ end
                 else
                     sLang = lang_text(msg.to.id, 'noSet')
                 end
-                text = text..'🌐 '..lang_text(msg.to.id, 'language')..': '..sLang..'\n\n'
+                text = text..'🌐 '..lang_text(msg.to.id, 'language')..': '..sLang..'\n'
                 local hash = 'flood:max:'..msg.to.id
                 if not redis:get(hash) then
                     floodMax = 5
@@ -620,7 +907,7 @@ end
                     floodTime = redis:get(hash)
                 end
 
-                text = text..'🔺 '..lang_text(msg.to.id, 'mFlood')..': '..floodMax..'\n\n🔺 '..lang_text(msg.to.id, 'tFlood')..': '..floodTime..'\n'            
+                text = text..'🔺 '..lang_text(msg.to.id, 'mFlood')..': '..floodMax..'\n🔺 '..lang_text(msg.to.id, 'tFlood')..': '..floodTime..'\n'            
                 
                 --Send settings to group or supergroup
                 if msg.to.type == 'chat' then
@@ -642,7 +929,7 @@ end
         else
             return '🚫 '..lang_text(msg.to.id, 'require_mod')
         end
-    elseif matches[1] == 'lang' then
+    elseif matches[1] == 'setlang' then
         if permissions(msg.from.id, msg.to.id, "set_lang") then
             hash = 'langset:'..msg.to.id
             redis:set(hash, matches[2])
@@ -779,10 +1066,9 @@ return {
         '^[!/#](muteall) (.*)$',
         '^[!/#](unmuteall)$',
         '^[!/#](link)$',
-        '^[!#/](setlang)$',
         '^[!/#](newlink)$',
         '^[!/#](tosupergroup)$',
-        '^[!/#](lang) (.*)$',
+        '^[!/#](setlang) (.*)$',
         '^[!/#](creategroup) (.*)$',
         '^[!/#](pcreategroup) (%d*) (.*)$',
 		'^[!/#](tophoto)$',
